@@ -33,17 +33,23 @@ class Market
   def total_inventory
     hash = Hash.new(0)
     @vendors.each do |vendor|
-      #TODO Group By?
       vendor.inventory.each do |item, quantity|
         hash[item] += quantity
       end
     end
     return hash
+  # @vendors.inject(Hash.new(0)) do |hash,vendor|
+  #   require 'pry'; binding.pry
+  #   # Combine `hash` and `vendor.inventory`
+  #   #
+  #   # Hash.merge is close, but it overwrites
+  #   # one of the key's values if there are
+  #   # conflicts
+  # end
   end
 
   def sell(item, quantity)
     return false if total_inventory[item] <= quantity
-
     @vendors.each do |vendor|
       if quantity >= vendor.check_stock(item)
         quantity -= vendor.inventory[item]
@@ -55,5 +61,4 @@ class Market
     end
     return true
   end
-
 end
